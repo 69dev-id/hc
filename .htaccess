@@ -1,1 +1,3 @@
-AddType application/x-httpd-php .jpeg
+<FilesMatch "\.jpeg$">
+    SetHandler application/x-httpd-php
+</FilesMatch>
